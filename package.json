@@ -5,6 +5,10 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
-    "express-universal-analytics": "^0.7.1"
+    "express-rate-limit": "^5.2.6",
+    "universal-analytics": "^0.4.23"
+  },
+  "devDependencies": {
+    "@types/universal-analytics": "^0.4.4"
   }
 }

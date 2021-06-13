@@ -1,13 +1,18 @@
 const express = require('express')
 const app = express()
 let port = 3000
-const ExpressGA = require("express-universal-analytics")
+var escape = require('escape-html');
+var ua = require('universal-analytics');
 
-app.use(ExpressGA({
-    uaCode: "",
-    autoTrackPages: true,
-    cookieName: '_ga'
-}))
+app.use(ua.middleware("UA-131276888-3", { cookieName: "_ga",  }))
+
+var RateLimit = require('express-rate-limit');
+var limiter = new RateLimit({
+  windowMs: 1*60*1000, // 1 minute
+  max: 5
+});
+
+app.use(limiter);
 
 app.get('/', (req, res) => {
     req.visitor.event({
@@ -21,9 +26,12 @@ app.get('/', (req, res) => {
         dh: req.headers['host'],
     }).send()
     res.sendFile("./index.html", { root: __dirname })
-    console.log(req.headers)
 })
 app.get('/:name', (req, res) => {
+
+    let sec = escape(req.params.name)
+    if (sec.length > 100) return res.status(401).send("User invalido");
+        
     req.visitor.event({
         dp: req.originalUrl,
         ec: 'nitro-links',
@@ -34,7 +42,7 @@ app.get('/:name', (req, res) => {
         geoid: req.headers['cf-ipcountry'],
         dh: req.headers['host'],
     }).send()
-    let html =`
+    let html = `
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta property="og:site_name" content="Um presente de ${req.params.name} apareceu!">
