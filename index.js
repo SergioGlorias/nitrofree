@@ -4,7 +4,7 @@ let port = 3000
 var escape = require('escape-html');
 var ua = require('universal-analytics');
 
-app.use(ua.middleware("UA-131276888-3", { cookieName: "_ga",  }))
+app.use(ua.middleware("", { cookieName: "_ga",  }))
 
 var RateLimit = require('express-rate-limit');
 var limiter = new RateLimit({
@@ -35,7 +35,7 @@ app.get('/:name', (req, res) => {
     req.visitor.event({
         dp: req.originalUrl,
         ec: 'nitro-links',
-        ea: req.params.name,
+        ea: sec,
         ua: req.headers['user-agent'],
         uip: req.headers['cf-connecting-ip'],
         dr: req.headers['referer'],
@@ -45,7 +45,7 @@ app.get('/:name', (req, res) => {
     let html = `
 <!DOCTYPE html>
 <meta charset="utf-8">
-<meta property="og:site_name" content="Um presente de ${req.params.name} apareceu!">
+<meta property="og:site_name" content="Um presente de ${sec} apareceu!">
 <meta property="og:title" content="Free Nitro">
 <meta property="og:image" content="https://static.wikia.nocookie.net/discord/images/b/b8/Nitro_badge.png">
 <meta property="og:description" content="Expira em 48h">
