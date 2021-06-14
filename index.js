@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 app.get('/:name', (req, res) => {
 
     let sec = escape(req.params.name)
-    if (sec.length > 100) return res.status(401).send("User invalido");
+    if (sec.length > 50) return res.status(401).send("User invalido");
         
     req.visitor.event({
         dp: req.originalUrl,
