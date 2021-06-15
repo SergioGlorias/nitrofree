@@ -3,7 +3,7 @@ const app = express()
 let port = 3000
 var escape = require('escape-html');
 var ua = require('universal-analytics');
-
+app.set('trust proxy', 1)
 app.use(ua.middleware("", { cookieName: "_ga",  }))
 
 var RateLimit = require('express-rate-limit');
