@@ -47,10 +47,10 @@ app.get('/:name', (req, res) => {
 <meta charset="utf-8">
 <meta property="og:site_name" content="Um presente de ${sec} apareceu!">
 <meta property="og:title" content="Free Nitro">
-<meta property="og:image" content="https://static.wikia.nocookie.net/discord/images/b/b8/Nitro_badge.png">
-<meta property="og:description" content="Expira em 48h">
+<meta property="og:image" content="https://cdn.discordapp.com/app-assets/521842831262875670/store/633877574094684160.webp?size=1024">
+<meta property="og:description" content="Expira em 48 horas">
 <meta name="theme-color" content="#30bf00">
-<title>Nitro Free</title>
+<title>Você recebeu uma assinatura de presente!</title>
 <meta http-equiv="refresh" content="0; URL=https://youtu.be/dQw4w9WgXcQ">
 <link rel="canonical" href="https://youtu.be/dQw4w9WgXcQ">
 `
