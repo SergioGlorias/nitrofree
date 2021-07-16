@@ -14,6 +14,22 @@ var limiter = new RateLimit({
 
 app.use(limiter);
 
+function linkRandom(geo = "") {
+    let num = (Math.random()).toFixed(3)
+    console.log(num)
+
+    if (["T1"].includes(geo)) return "https://youtu.be/SN5awaBMkuY"
+    else if (num <= .01) return "https://youtu.be/vfjnUgToHnA"
+    else if (num <= .15) return "https://youtu.be/XDFFvsXqJJk"
+    else if (num <= .25) return "https://youtu.be/v1POP-m76ac"
+    else if (num <= .30 && ["BR", "PT"].includes(geo)) return "https://youtube.com/clip/UgyI6DhZfLywdxJ8jN14AaABCQ"
+    else if (num <= .40) return "https://youtu.be/MO7bRMa9bmA?t=37"
+    else if (num <= .45) return "https://youtu.be/K7XHy8nppf4"
+    else if (.666 === num && ["BR", "PT"].includes(geo)) return "https://youtu.be/wUHKpxtWvUQ"
+    else if (.666 === num && !["BR", "PT"].includes(geo)) return "https://youtu.be/EzN9u2xBBVY?t=5"
+    else return "https://youtu.be/dQw4w9WgXcQ"
+}
+
 app.get('/', (req, res) => {
     req.visitor.event({
         dp: req.originalUrl,
@@ -25,7 +41,20 @@ app.get('/', (req, res) => {
         geoid: req.headers['cf-ipcountry'],
         dh: req.headers['host'],
     }).send()
-    res.sendFile("./index.html", { root: __dirname })
+
+    let link = linkRandom(req.headers['cf-ipcountry'])
+    let html = `<!DOCTYPE html>
+<meta charset="utf-8">
+<meta property="og:site_name" content="Um presente apareceu!">
+<meta property="og:title" content="Free Nitro">
+<meta property="og:image" content="https://cdn.discordapp.com/app-assets/521842831262875670/store/633877574094684160.webp?size=1024">
+<meta property="og:description" content="Expira em 48 horas">
+<meta name="theme-color" content="#FFFFFF">
+<title>>Você recebeu uma assinatura de presente!</title>
+<meta http-equiv="refresh" content="0; URL=${link}">
+<link rel="canonical" href="${link}">`
+    
+    res.send(html).end()
 })
 app.get('/:name', (req, res) => {
 
@@ -42,8 +71,19 @@ app.get('/:name', (req, res) => {
         geoid: req.headers['cf-ipcountry'],
         dh: req.headers['host'],
     }).send()
-    let html = `
-<!DOCTYPE html>
+    let link
+    switch (sec) {
+        case "\ud83d\udc27":
+        case "pinguim":
+        case "pinguin":
+        case "tux":
+            link = "https://youtu.be/vfjnUgToHnA"
+            break;
+        default:
+            link = linkRandom(req.headers['cf-ipcountry'])
+            break;
+    }
+    let html = `<!DOCTYPE html>
 <meta charset="utf-8">
 <meta property="og:site_name" content="Um presente de ${sec} apareceu!">
 <meta property="og:title" content="Free Nitro">
@@ -51,10 +91,9 @@ app.get('/:name', (req, res) => {
 <meta property="og:description" content="Expira em 48 horas">
 <meta name="theme-color" content="#30bf00">
 <title>Você recebeu uma assinatura de presente!</title>
-<meta http-equiv="refresh" content="0; URL=https://youtu.be/dQw4w9WgXcQ">
-<link rel="canonical" href="https://youtu.be/dQw4w9WgXcQ">
-`
-    res.send(html)
+<meta http-equiv="refresh" content="0; URL=${link}">
+<link rel="canonical" href="${link}">`
+    res.send(html).end()
 })
 
 app.use(function (req, res) {
