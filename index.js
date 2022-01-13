@@ -12,7 +12,8 @@ const server = fastify({
     trustProxy: true
 });
 
-function linkRandom(geo = "") { // this initializer has complexity = 13
+/*eslint complexity: ["error", 13]*/
+function linkRandom(geo = "") {
     let num = (Math.random()).toFixed(3);
 
     if (["T1"].includes(geo)) {return "https://youtu.be/SN5awaBMkuY";}
@@ -35,7 +36,7 @@ server.register(fastifyFavicon);
 
 server.get("/", async (request, reply) => {
 
-    let link = linkRandom(request.headers["cf-ipcountry"])
+    let link = linkRandom(request.headers["cf-ipcountry"]);
     let html = `<!DOCTYPE html>
 <meta charset="utf-8">
 <meta property="og:site_name" content="Um presente selvagem apareceu apareceu!">
@@ -67,7 +68,8 @@ server.get("/", async (request, reply) => {
 
 });
 
-server.get("/:name", async (request, reply) => { // this initializer has complexity = 9
+/*eslint complexity: ["error", 9]*/
+server.get("/:name", async (request, reply) => {
 
     let sec = escapeHTML(request.params.name);
     if (sec.length > 50) {return reply.status(400).send("Invalid link");}
@@ -115,10 +117,10 @@ server.get("/:name", async (request, reply) => { // this initializer has complex
 </script>
 <!-- End Matomo Code -->
 <meta http-equiv="refresh" content="0; URL=${link}">
-<link rel="canonical" href="${link}">`
+<link rel="canonical" href="${link}">`;
 
-    return reply.type('text/html').send(html);
-})
+    return reply.type("text/html").send(html);
+});
 
 server.setNotFoundHandler(function (request, reply) {
     reply.redirect("/");
