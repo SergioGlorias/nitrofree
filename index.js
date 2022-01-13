@@ -73,19 +73,16 @@ server.get("/:name", async (request, reply) => {
     if (sec.length > 50) return reply.status(400).send("Invalid link")
 
     let link
-    console.log(sec)
-    switch (sec) {
+    switch (sec.toLocaleLowerCase()) {
         case "\ud83d\udc27":
         case "pinguim":
         case "pinguin":
         case "tux":
-            console.log("Pinguim")
             link = "https://youtu.be/vfjnUgToHnA"
             break;
         case "ravena":
         case "raven":
         case "666":
-            console.log("Raven")
             link = "https://www.youtube.com/watch?v=qgbF4WI49jE"
             break;
         default:
