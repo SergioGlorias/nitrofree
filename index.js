@@ -5,7 +5,6 @@ import fastifyFavicon from "fastify-favicon";
 import path from "path";
 import escapeHTML from "escape-html";
 import { fileURLToPath } from "url";
-import { encode } from "punycode";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
