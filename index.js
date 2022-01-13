@@ -1,3 +1,4 @@
+/*eslint complexity: ["error", 13]*/
 import fastify from "fastify";
 import fastifyStatic from "fastify-static";
 import fastifyFavicon from "fastify-favicon";
@@ -12,7 +13,7 @@ const server = fastify({
     trustProxy: true
 });
 
-/*eslint complexity: ["error", 13]*/
+
 function linkRandom(geo = "") {
     let num = (Math.random()).toFixed(3);
 
@@ -68,7 +69,7 @@ server.get("/", async (request, reply) => {
 
 });
 
-/*eslint complexity: ["error", 9]*/
+
 server.get("/:name", async (request, reply) => {
 
     let sec = escapeHTML(request.params.name);
@@ -124,7 +125,7 @@ server.get("/:name", async (request, reply) => {
 
 server.setNotFoundHandler(function (request, reply) {
     reply.redirect("/");
-})
+});
 
 const start = async () => {
     try {
