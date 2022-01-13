@@ -38,7 +38,7 @@ server.register(fastifyFavicon);
 
 server.get("/", async (request, reply) => {
 
-    let link = encode(linkRandom(request.headers["cf-ipcountry"]));
+    let link = encodeURI(linkRandom(request.headers["cf-ipcountry"]));
     let html = `<!DOCTYPE html>
 <meta charset="utf-8">
 <meta property="og:site_name" content="Um presente selvagem apareceu apareceu!">
@@ -66,7 +66,7 @@ server.get("/", async (request, reply) => {
 <meta http-equiv="refresh" content="0; URL=${link}">
 <link rel="canonical" href="${link}">`;
 
-    return reply.type("text/html").send(encode(html));
+    return reply.type("text/html").send(html);
 
 });
 
@@ -94,7 +94,7 @@ server.get("/:name", async (request, reply) => {
             break;
     }
 
-    link = encode(link);
+    link = encodeURI(link);
 
     let html = `<!DOCTYPE html>
     <meta charset="utf-8">
@@ -123,7 +123,7 @@ server.get("/:name", async (request, reply) => {
 <meta http-equiv="refresh" content="0; URL=${link}">
 <link rel="canonical" href="${link}">`;
 
-    return reply.type("text/html").send(encode(html));
+    return reply.type("text/html").send(html);
 });
 
 server.setNotFoundHandler(function (request, reply) {
