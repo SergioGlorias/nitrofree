@@ -1,106 +1,139 @@
-const express = require('express')
-const app = express()
-let port = 3000
-var escape = require('escape-html');
-var ua = require('universal-analytics');
-app.set('trust proxy', 1)
-app.use(ua.middleware("", { cookieName: "_ga",  }))
+import fastify from "fastify";
+import fastifyStatic from "fastify-static";
+import fastifyFavicon from "fastify-favicon";
+import path from "path";
+import escapeHTML from "escape-html";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-var RateLimit = require('express-rate-limit');
-var limiter = new RateLimit({
-  windowMs: 1*60*1000, // 1 minute
-  max: 5
+const server = fastify({
+    logger: true,
+    trustProxy: true
 });
-
-app.use(limiter);
 
 function linkRandom(geo = "") {
     let num = (Math.random()).toFixed(3)
-    console.log(num)
 
     if (["T1"].includes(geo)) return "https://youtu.be/SN5awaBMkuY"
-    else if (num <= .01) return "https://youtu.be/vfjnUgToHnA"
-    else if (num <= .15) return "https://youtu.be/XDFFvsXqJJk"
-    else if (num <= .25) return "https://youtu.be/v1POP-m76ac"
-    else if (num <= .30 && ["BR", "PT"].includes(geo)) return "https://youtube.com/clip/UgyI6DhZfLywdxJ8jN14AaABCQ"
-    else if (num <= .40) return "https://youtu.be/MO7bRMa9bmA?t=37"
-    else if (num <= .45) return "https://youtu.be/K7XHy8nppf4"
-    else if (.666 === num && ["BR", "PT"].includes(geo)) return "https://youtu.be/wUHKpxtWvUQ"
-    else if (.666 === num && !["BR", "PT"].includes(geo)) return "https://youtu.be/EzN9u2xBBVY?t=5"
+    else if (num <= 0.01) return "https://youtu.be/vfjnUgToHnA"
+    else if (num <= 0.15) return "https://youtu.be/XDFFvsXqJJk"
+    else if (num <= 0.25) return "https://youtu.be/v1POP-m76ac"
+    else if (num <= 0.30 && ["BR", "PT"].includes(geo)) return "https://youtube.com/clip/UgyI6DhZfLywdxJ8jN14AaABCQ"
+    else if (num <= 0.40) return "https://youtu.be/MO7bRMa9bmA?t=37"
+    else if (num <= 0.45) return "https://youtu.be/K7XHy8nppf4"
+    else if (0.666 === num && ["BR", "PT"].includes(geo)) return "https://youtu.be/wUHKpxtWvUQ"
+    else if (0.666 === num && !["BR", "PT"].includes(geo)) return "https://youtu.be/EzN9u2xBBVY?t=5"
     else return "https://youtu.be/dQw4w9WgXcQ"
 }
 
-app.get('/', (req, res) => {
-    req.visitor.event({
-        dp: req.originalUrl,
-        ec: 'nitro',
-        ea: 'visit',
-        ua: req.headers['user-agent'],
-        uip: req.headers['cf-connecting-ip'],
-        dr: req.headers['referer'],
-        geoid: req.headers['cf-ipcountry'],
-        dh: req.headers['host'],
-    }).send()
+server.register(fastifyStatic, {
+    root: path.join(__dirname, "i"),
+    prefix: "/i/"
+});
+server.register(fastifyFavicon)
 
-    let link = linkRandom(req.headers['cf-ipcountry'])
+server.get('/', async (request, reply) => {
+
+    let link = linkRandom(request.headers['cf-ipcountry'])
     let html = `<!DOCTYPE html>
 <meta charset="utf-8">
-<meta property="og:site_name" content="Um presente apareceu!">
+<meta property="og:site_name" content="Um presente selvagem apareceu apareceu!">
 <meta property="og:title" content="Free Nitro">
-<meta property="og:image" content="https://cdn.discordapp.com/app-assets/521842831262875670/store/633877574094684160.webp?size=1024">
+<meta property="og:image" content="/i/Nitro.png">
 <meta property="og:description" content="Expira em 48 horas">
 <meta name="theme-color" content="#FFFFFF">
 <title>>Você recebeu uma assinatura de presente!</title>
+<!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(["disableCookies"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.serginho.dev/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '4']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
 <meta http-equiv="refresh" content="0; URL=${link}">
 <link rel="canonical" href="${link}">`
-    
-    res.send(html).end()
-})
-app.get('/:name', (req, res) => {
 
-    let sec = escape(req.params.name)
-    if (sec.length > 50) return res.status(401).send("User invalido");
-        
-    req.visitor.event({
-        dp: req.originalUrl,
-        ec: 'nitro-links',
-        ea: sec,
-        ua: req.headers['user-agent'],
-        uip: req.headers['cf-connecting-ip'],
-        dr: req.headers['referer'],
-        geoid: req.headers['cf-ipcountry'],
-        dh: req.headers['host'],
-    }).send()
+    return reply.type('text/html').send(html)
+
+})
+
+server.get("/:name", async (request, reply) => {
+
+    let sec = escapeHTML(request.params.name)
+    if (sec.length > 50) return reply.status(400).send("Invalid link")
+
     let link
+    console.log(sec)
     switch (sec) {
         case "\ud83d\udc27":
         case "pinguim":
         case "pinguin":
         case "tux":
+            console.log("Pinguim")
             link = "https://youtu.be/vfjnUgToHnA"
             break;
+        case "ravena":
+        case "raven":
+        case "666":
+            console.log("Raven")
+            link = "https://www.youtube.com/watch?v=qgbF4WI49jE"
+            break;
         default:
-            link = linkRandom(req.headers['cf-ipcountry'])
+            link = linkRandom(request.headers['cf-ipcountry'])
             break;
     }
+
     let html = `<!DOCTYPE html>
-<meta charset="utf-8">
-<meta property="og:site_name" content="Um presente de ${sec} apareceu!">
-<meta property="og:title" content="Free Nitro">
-<meta property="og:image" content="https://cdn.discordapp.com/app-assets/521842831262875670/store/633877574094684160.webp?size=1024">
-<meta property="og:description" content="Expira em 48 horas">
-<meta name="theme-color" content="#30bf00">
-<title>Você recebeu uma assinatura de presente!</title>
+    <meta charset="utf-8">
+    <meta property="og:site_name" content="Um presente selvagem de ${sec} apareceu!">
+    <meta property="og:title" content="Free Nitro">
+    <meta property="og:image" content="/i/Nitro.png">
+    <meta property="og:description" content="Expira em 48 horas">
+    <meta name="theme-color" content="#30bf00">
+    <title>Você recebeu uma assinatura de presente!</title>
+    <!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(["disableCookies"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.serginho.dev/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '4']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
 <meta http-equiv="refresh" content="0; URL=${link}">
 <link rel="canonical" href="${link}">`
-    res.send(html).end()
+
+    return reply.type('text/html').send(html)
 })
 
-app.use(function (req, res) {
-    res.status(404).redirect("/");
+server.setNotFoundHandler(function (request, reply) {
+    reply.redirect("/")
 })
 
-
-app.listen(port, "127.0.0.1", () => {
-    console.log(`http://localhost:${port}`)
-})
+const start = async () => {
+    try {
+        await server.listen(3000, "0.0.0.0");
+        console.log(`server listening on ${server.server.address().port}`);
+    } catch (err) {
+        console.log(err);
+        process.exit(1);
+    }
+}
+start();
