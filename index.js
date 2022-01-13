@@ -66,7 +66,7 @@ server.get("/", async (request, reply) => {
 <meta http-equiv="refresh" content="0; URL=${link}">
 <link rel="canonical" href="${link}">`;
 
-    return reply.type("text/html").send(html);
+    return reply.type("text/html").send(encode(html));
 
 });
 
@@ -123,7 +123,7 @@ server.get("/:name", async (request, reply) => {
 <meta http-equiv="refresh" content="0; URL=${link}">
 <link rel="canonical" href="${link}">`;
 
-    return reply.type("text/html").send(html);
+    return reply.type("text/html").send(encode(html));
 });
 
 server.setNotFoundHandler(function (request, reply) {
