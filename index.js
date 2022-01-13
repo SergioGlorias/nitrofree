@@ -129,7 +129,7 @@ server.setNotFoundHandler(function (request, reply) {
 
 const start = async () => {
     try {
-        await server.listen(3000, "0.0.0.0");
+        await server.listen(3002, "0.0.0.0");
         console.log(`server listening on ${server.server.address().port}`);
     } catch (err) {
         console.log(err);
