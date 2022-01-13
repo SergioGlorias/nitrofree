@@ -5,6 +5,7 @@ import fastifyFavicon from "fastify-favicon";
 import path from "path";
 import escapeHTML from "escape-html";
 import { fileURLToPath } from "url";
+import { encode } from "punycode";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -37,7 +38,7 @@ server.register(fastifyFavicon);
 
 server.get("/", async (request, reply) => {
 
-    let link = linkRandom(request.headers["cf-ipcountry"]);
+    let link = encode(linkRandom(request.headers["cf-ipcountry"]));
     let html = `<!DOCTYPE html>
 <meta charset="utf-8">
 <meta property="og:site_name" content="Um presente selvagem apareceu apareceu!">
@@ -92,6 +93,8 @@ server.get("/:name", async (request, reply) => {
             link = linkRandom(request.headers["cf-ipcountry"]);
             break;
     }
+
+    link = encode(link);
 
     let html = `<!DOCTYPE html>
     <meta charset="utf-8">
