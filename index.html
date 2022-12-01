@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Você recebeu uma assinatura de presente!</title>
+    <meta
+      property="og:site_name"
+      content="Um presente selvagem apareceu apareceu!"
+    />
+    <meta property="og:title" content="Free Nitro" />
+    <meta property="og:image" content="/i/Nitro.png" />
+    <meta property="og:description" content="Expira em 48 horas" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <script>
+      function linkRandom() {
+        let num = Math.random().toFixed(3);
+
+        if (num <= 0.01) {
+          return "https://youtu.be/vfjnUgToHnA";
+        } else if (num <= 0.15) {
+          return "https://youtu.be/XDFFvsXqJJk";
+        } else if (num <= 0.25) {
+          return "https://youtu.be/v1POP-m76ac";
+        } else if (num <= 0.3 && ["BR", "PT"].includes(geo)) {
+          return "https://youtube.com/clip/UgyI6DhZfLywdxJ8jN14AaABCQ";
+        } else if (num <= 0.4) {
+          return "https://youtu.be/MO7bRMa9bmA?t=37";
+        } else if (num <= 0.45) {
+          return "https://youtu.be/K7XHy8nppf4";
+        } else if (0.666 === num) {
+          return "https://youtu.be/wUHKpxtWvUQ";
+        } else {
+          return "https://youtu.be/dQw4w9WgXcQ";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <script>
+      window.location.href = linkRandom();
+    </script>
+  </body>
+</html>
